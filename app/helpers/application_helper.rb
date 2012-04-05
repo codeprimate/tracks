@@ -1,3 +1,5 @@
+# The methods added to this helper will be available to all templates in the
+# application.
 module ApplicationHelper
   
   # Replicates the link_to method but also checks request.request_uri to find
@@ -198,7 +200,11 @@ module ApplicationHelper
     else
       return list.inject("") do |html, item|
         link = (item.class == "Project") ? link_to_project( item ) : link_to_context(item)
+<<<<<<< HEAD
         html << content_tag(:li, link + " (" + count_undone_todos_phrase(item, I18n.t("common.actions_midsentence"))+")")
+=======
+        html << content_tag(:li, link + " (" + count_undone_todos_phrase(item,"actions")+")")
+>>>>>>> Work in progress: has_many_polymorphs does not work with rails 3.2 because of intrusive changes in rails internals. I think we need to rip out this dependency...
       end
     end
   end
