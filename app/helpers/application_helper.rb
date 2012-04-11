@@ -6,17 +6,19 @@ module ApplicationHelper
   # current page. If that matches the url, the link is marked id = "current"
   #
   def navigation_link(name, options = {}, html_options = nil, *parameters_for_method_reference)
-    if html_options
-      html_options = html_options.stringify_keys
-      convert_options_to_javascript!(html_options)
-      tag_options = tag_options(html_options)
-    else
-      tag_options = nil
-    end
-    url = options.is_a?(String) ? options : self.url_for(options, *parameters_for_method_reference)
-    id_tag = (request.request_uri == url) ? " id=\"current\"" : ""
-    
-    "<a href=\"#{url}\"#{tag_options}#{id_tag}>#{name || url}</a>"
+    link_to name, options, html_options
+    # TODO: check if this needs to be converted
+    # if html_options
+    #   html_options = html_options.stringify_keys
+    #   convert_options_to_javascript!(html_options)
+    #   tag_options = tag_options(html_options)
+    # else
+    #   tag_options = nil
+    # end
+    # url = options.is_a?(String) ? options : self.url_for(options, *parameters_for_method_reference)
+    # id_tag = (request.request_uri == url) ? " id=\"current\"" : ""
+    #
+    # "<a href=\"#{url}\"#{tag_options}#{id_tag}>#{name || url}</a>"
   end
   
   def days_from_today(date)
@@ -99,7 +101,7 @@ module ApplicationHelper
   # actions or multiple actions
   #
   def count_undone_todos_phrase(todos_parent, string="actions")
-    @controller.count_undone_todos_phrase(todos_parent, string)
+    controller.count_undone_todos_phrase(todos_parent, string)
   end
 
   def count_undone_todos_phrase_text(todos_parent, string="actions")
@@ -200,11 +202,7 @@ module ApplicationHelper
     else
       return list.inject("") do |html, item|
         link = (item.class == "Project") ? link_to_project( item ) : link_to_context(item)
-<<<<<<< HEAD
         html << content_tag(:li, link + " (" + count_undone_todos_phrase(item, I18n.t("common.actions_midsentence"))+")")
-=======
-        html << content_tag(:li, link + " (" + count_undone_todos_phrase(item,"actions")+")")
->>>>>>> Work in progress: has_many_polymorphs does not work with rails 3.2 because of intrusive changes in rails internals. I think we need to rip out this dependency...
       end
     end
   end
@@ -239,7 +237,7 @@ module ApplicationHelper
   end
   
   def determine_done_path
-    case @controller.controller_name
+    case controller.controller_name
     when "contexts"
       done_todos_context_path(@context)
     when "projects"
@@ -256,7 +254,7 @@ module ApplicationHelper
   end
   
   def determine_all_done_path
-    case @controller.controller_name
+    case controller.controller_name
     when "contexts"
       all_done_todos_context_path(@context)
     when "projects"
